@@ -24,16 +24,16 @@ d = data['d']  # distance between robot center and laser rangefinder [m]
 
 
 ## Testing the Unpacked Data
-print(v.shape)
+""" print(v.shape)
 print(len(v))
 print(d.shape)
-print(d[0])
+print(d[0]) """
 
 ## Initializing Parameters
 v_var = 0.01  # translation velocity variance
 om_var = 0.01  # rotational velocity variance
 r_var = 0.01   # range measurements variance (tuned)
-b_var = 10     # bearing measurement variance (tuned)
+b_var = 10    # bearing measurement variance (tuned)
 
 Q_km = np.diag([v_var, om_var]) # input noise covariance
 cov_y = np.diag([r_var, b_var])  # measurement noise covariance
@@ -41,15 +41,16 @@ cov_y = np.diag([r_var, b_var])  # measurement noise covariance
 x_est = np.zeros([len(v), 3])  # estimated states, x, y, and theta
 P_est = np.zeros([len(v), 3, 3])  # state covariance matrices
 
-x_est[0] = np.array([x_init, y_init, th_init]) # initial state
-P_est[0] = np.diag([1, 1, 0.1]) # initial state covariance
+x_est[0] = np.array([x_init, y_init, th_init]) # initial state 
+P_est[0] = np.diag([1, 1, 0.01]) # initial state covariance
 
+"""
 print(Q_km.shape)
 print(Q_km)
 print(cov_y.shape)
 print(cov_y)
 print(P_est.shape)
-print(P_est[0])
+print(P_est[0])  """
 
 
 # Wraps angle to (-pi, pi] range
@@ -112,12 +113,12 @@ x_check = x_est[0, :].reshape(3, 1)
 for k in range(1, len(t)):  # start at 1 because initial prediction is already set
 
     delta_t = t[k] - t[k - 1]  # time step
-    #theta = x_check[2] if x_check[2] is not None else 0.0  # Ensure theta is not None  
+     
     theta = wraptopi(x_check[2, 0])
 
     # Odometry input
-    v_k = v[k-1] #if v[k-1] is not None else 0.0  # Make sure v_k is a valid scalar
-    om_k = om[k-1] #if om[k-1] is not None else 0.0  # Make sure om_k is a valid scalar
+    v_k = v[k-1] 
+    om_k = om[k-1]
 
     # 1. Update state with odometry readings
     x_check[0] += v_k * np.cos(theta) * delta_t
